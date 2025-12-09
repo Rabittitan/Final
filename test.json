@@ -1,0 +1,104 @@
+{
+  "info": {
+    "name": "Final Project API",
+    "_postman_id": "12345678-abcd-efgh-ijkl-987654321000",
+    "description": "Collection test API cho dự án IoT Zigbee",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"tien\",\n  \"email\": \"tien@example.com\",\n  \"password\": \"12345678\"\n}"
+        },
+        "url": { "raw": "http://localhost:5000/api/auth/register" }
+      }
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"tien@example.com\",\n  \"password\": \"12345678\"\n}"
+        },
+        "url": { "raw": "http://localhost:5000/api/auth/login" }
+      }
+    },
+    {
+      "name": "Device - Add",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"zcId\": \"coordinator1\",\n  \"ieee_address\": \"0x00124b0012345678\",\n  \"friendly_name\": \"sensor1\",\n  \"device_type\": \"sensor\"\n}"
+        },
+        "url": { "raw": "http://localhost:5000/api/devices" }
+      }
+    },
+    {
+      "name": "Coordinator - Add",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"ZC1\",\n  \"location\": \"Living Room\"\n}"
+        },
+        "url": { "raw": "http://localhost:5000/api/coordinators" }
+      }
+    },
+    {
+      "name": "Sensor - Query Data",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "url": {
+          "raw": "http://localhost:5000/api/sensor?deviceId=sensor1&metric=temperature&from=2025-12-01&to=2025-12-09"
+        }
+      }
+    },
+    {
+      "name": "Firmware - Upload",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "file", "type": "file", "src": "" },
+            { "key": "version", "value": "1.0.0" },
+            { "key": "device_type", "value": "relay" }
+          ]
+        },
+        "url": { "raw": "http://localhost:5000/api/firmwares/upload" }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "accessToken",
+      "value": ""
+    }
+  ]
+}

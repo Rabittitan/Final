@@ -1,0 +1,19 @@
+// src/utils/logger.js
+const { createLogger, format, transports } = require('winston');
+
+const logger = createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  format: format.combine(
+    format.timestamp(),
+    format.errors({ stack: true }),
+    format.json()
+  ),
+  transports: [
+    new transports.Console(),
+    new transports.File({ filename: 'logs/app-info.log', level: 'info' }),
+    new transports.File({ filename: 'logs/app-error.log', level: 'error' })
+  ],
+  exitOnError: false
+});
+
+module.exports = logger;
