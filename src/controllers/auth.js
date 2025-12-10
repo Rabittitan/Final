@@ -38,9 +38,13 @@ exports.refresh = async (req, res, next) => {
 exports.logout = async (req, res, next) => {
   try {
     const { refreshToken } = req.body;
-    if (!refreshToken) throw new AppError('Missing refresh token', 400, 'REFRESH_TOKEN_REQUIRED');
+    const authHeader = req.headers.authorization;
+    if (!authHeader) throw new AppError('Missing access token', 401);
 
-    await authService.logout(req.user._id, refreshToken);
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    await authService.logout(decoded.id, refreshToken);
     res.json({ message: 'Logged out' });
   } catch (err) {
     next(err);

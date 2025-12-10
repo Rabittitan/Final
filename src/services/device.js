@@ -1,6 +1,12 @@
 const Device = require('../models/device');
 const DeviceLog = require('../models/deviceLog');
 
+
+exports.create = async(data) => {
+  const device = new Device(data);
+  return device.save();
+};
+
 exports.listByCoordinator = async (zcId) => {
   return Device.find({ zc_id: zcId, status: 'active' });
 };
@@ -14,12 +20,13 @@ exports.getByFriendlyName = async (name) => {
 };
 
 exports.updateAvailability = async (friendlyName) => {
-  const device = await this.getByFriendlyName(friendlyName);
+  const device = await exports.getByFriendlyName(friendlyName);
   if (device) {
     device.last_seen = new Date();
     await device.save();
   }
 };
+
 
 exports.ingestLog = async (deviceId, msg) => {
   await DeviceLog.create({
@@ -29,6 +36,3 @@ exports.ingestLog = async (deviceId, msg) => {
     message: msg.message || JSON.stringify(msg)
   });
 };
-
-
-//emitDeviceStatus(device.owner, device._id, 'online');

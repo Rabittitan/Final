@@ -28,6 +28,9 @@ const firmwareService = require('./services/firmware');
 const sensorServiceFactory = require('./services/sensor');
 const mqttDispatcherFactory = require('./services/mqttDispatcher');
 
+
+const logger = require('./utils/logger');
+
 (async () => {
   try {
     // 1. Kết nối DB
@@ -44,8 +47,9 @@ const mqttDispatcherFactory = require('./services/mqttDispatcher');
 
     // 4. Khởi tạo services (inject dependencies)
     const sensorService = sensorServiceFactory(influx, alertService, deviceService);
-    const mqttDispatcher = mqttDispatcherFactory(mqtt, { sensorService, deviceService });
+    const mqttDispatcher = mqttDispatcherFactory(mqtt, { sensorService, deviceService ,coordinatorService});
 
+    
     // 5. Middleware
     app.use(cors());
     app.use(express.json());
@@ -54,13 +58,15 @@ const mqttDispatcherFactory = require('./services/mqttDispatcher');
     app.use(requestLogger);
     app.use(errorMiddleware);
     
+    
 
     // 6. Start server
     server.listen(env.port, () => {
       console.log(`[Server] Running on port ${env.port}`);
-      // logger.error('MQTT publish error', { component: 'MQTT', err, topic: t });
-      // logger.info('Mongo connected', { component: 'DB' });
-      // logger.warn('Socket room missing', { component: 'SOCKET', room });
+      console.log('Mongo connected', { component: 'DB' });
+      logger.info('Server started successfully', { component: 'SERVER' });
+      
+     
 
     });
 
